@@ -1,0 +1,16 @@
+# Project specific
+build/
+include/config.h
+include/config.h.old
+build.log
+
+# Object files
+*.o
+*.d
+*.map
+*.elf
+*.hex
+
+# Editor backup and swap files
+*~
+*.swp
