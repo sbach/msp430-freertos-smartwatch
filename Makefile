@@ -144,7 +144,6 @@ $(OUTDIR)/firmware.elf: $(OBJS)
 # Top rules
 
 config:
-	@mkdir -p include
 	@if test -e include/config.h; then \
 		mv include/config.h include/config.h.old; \
 	fi
