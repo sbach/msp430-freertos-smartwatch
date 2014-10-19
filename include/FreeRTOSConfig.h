@@ -84,6 +84,7 @@
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( 25000000UL )
 #define configLFXT_CLOCK_HZ       		( 32768L )
+#define configACLK_FREQ_HZ				( configLFXT_CLOCK_HZ )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 5 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )

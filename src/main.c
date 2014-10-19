@@ -50,8 +50,6 @@ void vApplicationTickHook( void )
 // case configTICK_VECTOR is set to TIMER0_A0_VECTOR.
 void vApplicationSetupTimerInterrupt( void )
 {
-    const unsigned short usACLK_Frequency_Hz = 32768;
-
     // Ensure the timer is stopped
     TA0CTL = 0;
 
@@ -62,7 +60,7 @@ void vApplicationSetupTimerInterrupt( void )
     TA0CTL |= TACLR;
 
     // Set the compare match value according to the tick rate we want
-    TA0CCR0 = usACLK_Frequency_Hz / configTICK_RATE_HZ;
+    TA0CCR0 = configACLK_FREQ_HZ / configTICK_RATE_HZ;
 
     // Enable the interrupts
     TA0CCTL0 = CCIE;
