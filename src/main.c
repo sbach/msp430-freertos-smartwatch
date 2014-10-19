@@ -27,7 +27,7 @@ int main( void )
     // Start the scheduler
     vTaskStartScheduler();
 
-    // If all is well then thes line will never be reached.  If it is reached
+    // If all is well then thes line will never be reached. If it is reached
     // then it is likely that there was insufficient (FreeRTOS) heap memory space
     // to create the idle task.  This may have been trapped by the malloc() failed
     //hook function, if one is configured.
@@ -72,7 +72,7 @@ void vApplicationSetupTimerInterrupt( void )
 
 void vApplicationIdleHook( void )
 {
-    // Called on each iteration of the idle task.  In this case the idle task
+    // Called on each iteration of the idle task. In this case the idle task
     // just enters a low(ish) power mode. */
     __bis_SR_register( LPM1_bits + GIE );
 }
@@ -93,7 +93,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
     ( void ) pcTaskName;
 
     // Run time stack overflow checking is performed if
-    // configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    // configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2. This hook
     // function is called if a stack overflow is detected.
     taskDISABLE_INTERRUPTS();
     for( ;; );
