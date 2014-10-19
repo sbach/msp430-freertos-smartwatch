@@ -10,6 +10,9 @@
 // Hardware includes
 #include "msp430.h"
 
+// HAL includes
+#include "hal/misc.h"
+
 
 // Prototypes
 void vApplicationTickHook( void );
@@ -23,6 +26,9 @@ int main( void )
 {
     //Stop watchdog timer to prevent time out reset
     WDTCTL = WDTPW + WDTHOLD;
+
+    // Setup the UCS and PMM
+    halSetupClockAndPowerManagment();
 
     // Start the scheduler
     vTaskStartScheduler();
