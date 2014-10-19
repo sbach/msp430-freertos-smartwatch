@@ -148,9 +148,7 @@ config:
 		mv include/config.h include/config.h.old; \
 	fi
 	@printf "$(GREY)Configuring...$(NORMAL)\n"
-	@echo '// #define CONFIG_DEBUG' > include/config.h
-	@echo '#define CONFIG_DATA_MODEL_SMALL' >> include/config.h
-	@echo '// #define CONFIG_DATA_MODEL_LARGE' >> include/config.h
+	@cp include/config.h.in include/config.h
 
 install: $(OUTDIR)/firmware.elf
 	@echo "Installing the new firmware via USB..."
