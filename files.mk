@@ -12,6 +12,7 @@ INCLUDES += -I. \
 
 SRCS = $(SOURCE_PATH)/main.c \
 	$(SOURCE_PATH)/hal/misc.c \
+	$(SOURCE_PATH)/hal/uart.c \
 	$(SOURCE_PATH)/hal/ti/ucs.c \
 	$(SOURCE_PATH)/hal/ti/pmm.c \
 	$(PORT_PATH)/port.c \
