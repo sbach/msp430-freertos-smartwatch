@@ -1,5 +1,3 @@
-// vim: ft=c sw=4 ts=4 noet tw=90 cc=+1
-
 // Standard
 #include <stdio.h>
 
