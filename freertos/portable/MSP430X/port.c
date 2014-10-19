@@ -11,6 +11,8 @@ extern volatile TCB_t * volatile pxCurrentTCB;
 volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 
 void vPortSetupTimerInterrupt( void );
+void __attribute__ ( ( interrupt(configTICK_VECTOR) , naked) ) vTickISREntry( void );
+
 
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
@@ -81,7 +83,7 @@ void vPortSetupTimerInterrupt( void )
 }
 
 
-__attribute__ ( ( interrupt(configTICK_VECTOR) , naked) ) void vTickISREntry( void )
+void __attribute__ ( ( interrupt(configTICK_VECTOR) , naked) ) vTickISREntry( void )
 {
 	extern void vPortTickISR( void );
 
