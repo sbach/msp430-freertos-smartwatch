@@ -116,13 +116,13 @@ include/config.h:
 $(OUTDIR)/%.o: %.S
 	@mkdir -p $(dir $@)
 	@printf "$(GREY)%-${PAD}s" "(CC) $<"
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $< 2>> $(LOG_OUT)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $< 2>> $(LOG_OUT)
 	$(CC_CHECK)
 
 $(OUTDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	@printf "$(GREY)%-${PAD}s" "(CC) $<"
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $< 2>> $(LOG_OUT)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $< 2>> $(LOG_OUT)
 	$(CC_CHECK)
 
 # ****************************************************************************************
@@ -137,7 +137,7 @@ $(OUTDIR)/firmware.elf: $(OBJS)
 	@printf "$(BOLD)Firmware generation: ELF$(NORMAL)\n"
 
 	@printf "$(GREY)%-${PAD}s" "(CC) $@"
-	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) -o $@ $+ 2>> $(LOG_OUT)
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDES) -o $@ $+ 2>> $(LOG_OUT)
 	$(CC_CHECK)
 
 	@rm -f output.map
