@@ -47,6 +47,15 @@ void halDebugUARTInit( void )
     UCA3IFG = 0;
 }
 
+void halDebugUARTWrite(const char *buf)
+{
+    // Send each character to the TX buffer
+    while (*buf) WRITE_DEBUG_UART(*buf++);
+
+    // Wait until transmit is done
+    while (UCA3STAT & UCBUSY);
+}
+
 void __attribute__ ( ( interrupt(USCI_A3_VECTOR) ) ) halDebugUARTISR( void )
 {
     switch (__even_in_range(UCA3IV,4)) {
