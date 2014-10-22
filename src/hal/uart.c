@@ -2,6 +2,12 @@
 #include "uart.h"
 
 
+/*******************************************************************************
+ * \brief   Setup UCA3 UART interface
+ *
+ * \param void
+ * \return void
+ ******************************************************************************/
 void halDebugUARTInit( void )
 {
     // Set P10.4 and P10.5 to UCA function
@@ -47,6 +53,12 @@ void halDebugUARTInit( void )
     UCA3IFG = 0;
 }
 
+/*******************************************************************************
+ * \brief   Write a string to the UART TX buffer
+ *
+ * \param const char *  Text to write
+ * \return void
+ ******************************************************************************/
 void halDebugUARTWrite(const char *buf)
 {
     // Send each character to the TX buffer
@@ -56,6 +68,12 @@ void halDebugUARTWrite(const char *buf)
     while (UCA3STAT & UCBUSY);
 }
 
+/*******************************************************************************
+ * \brief   ISR to handle events on the USCI_A3 pins.
+ *
+ * \param void
+ * \return void
+ ******************************************************************************/
 void __attribute__ ( ( interrupt(USCI_A3_VECTOR) ) ) halDebugUARTISR( void )
 {
     switch (__even_in_range(UCA3IV,4)) {
