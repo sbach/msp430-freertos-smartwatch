@@ -11,3 +11,5 @@
 #define CONFIG_XT1_CLOCK_HZ             32768
 // Number of desired FreeRTOS ticks per second
 #define CONFIG_FREERTOS_TICK_RATE_HZ    1024
+// Number of TimerA0 ticks for one FreeRTOS tick
+#define CONFIG_FREERTOS_TICK_COUNT    1

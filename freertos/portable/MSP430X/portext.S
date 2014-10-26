@@ -1,3 +1,4 @@
+	#include "msp430.h"
 	#include "data_model.h"
 
 	.global xTaskIncrementTick
@@ -10,6 +11,8 @@
 	.global vPortCooperativeTickISR
 	.global vPortYield
 	.global xPortStartScheduler
+
+	.global FreeRTOSTickCount
 
 
 .macro portSAVE_CONTEXT
@@ -44,6 +47,9 @@ vPortPreemptiveTickISR:
 	push.w sr
 	portSAVE_CONTEXT
 
+	movx.w &TA0R, &TA0CCR0
+	add.w &FreeRTOSTickCount, &TA0CCR0
+
 	call_x	#xTaskIncrementTick
 	call_x	#vTaskSwitchContext
 
@@ -58,6 +64,9 @@ vPortCooperativeTickISR:
 	;to save it manually before it gets modified (interrupts get disabled).
 	push.w sr
 	portSAVE_CONTEXT
+
+	movx.w &TA0R, &TA0CCR0
+	add.w &FreeRTOSTickCount, &TA0CCR0
 
 	call_x	#xTaskIncrementTick
 
