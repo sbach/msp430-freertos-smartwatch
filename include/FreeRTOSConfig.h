@@ -101,11 +101,7 @@
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 
-#ifdef __LARGE_DATA_MODEL__
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#else
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 )
-#endif
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0
