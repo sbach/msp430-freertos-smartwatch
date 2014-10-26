@@ -37,15 +37,15 @@ void halSetupClockAndPowerManagment(void) {
     //        Digitally-Controlled Oscillator.
     SELECT_FLLREF(SELREF__XT1CLK);
 
-    unsigned long ratio = configCPU_CLOCK_HZ / configLFXT_CLOCK_HZ;
+    unsigned long ratio = CONFIG_CPU_CLOCK_HZ / CONFIG_XT1_CLOCK_HZ;
 
     // Convert a Hz value to a KHz value, as required
     //  by the Init_FLL_Settle() function.
-    unsigned long ulCPU_Clock_KHz = configCPU_CLOCK_HZ / 1000UL;
+    unsigned long ulCPU_Clock_KHz = CONFIG_CPU_CLOCK_HZ / 1000UL;
 
     //Make sure we aren't overclocking
-    if(ulCPU_Clock_KHz > 25000L) {
-        ulCPU_Clock_KHz = 25000L;
+    if(ulCPU_Clock_KHz > CONFIG_CPU_CLOCK_LIMIT_KHZ) {
+        ulCPU_Clock_KHz = CONFIG_CPU_CLOCK_LIMIT_KHZ;
     }
 
     // Init the FLL and DCO with the requested frequency (in KHz)

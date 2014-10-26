@@ -64,7 +64,7 @@ void vApplicationSetupTimerInterrupt( void )
     TA0CTL |= TACLR;
 
     // Set the compare match value according to the tick rate we want
-    TA0CCR0 = configACLK_FREQ_HZ / configTICK_RATE_HZ;
+    TA0CCR0 = CONFIG_XT1_CLOCK_HZ / CONFIG_FREERTOS_TICK_RATE_HZ;
 
     // Enable the interrupts
     TA0CCTL0 = CCIE;

@@ -1,3 +1,13 @@
 // #define CONFIG_DEBUG
 #define CONFIG_DATA_MODEL_SMALL
 // #define CONFIG_DATA_MODEL_LARGE
+
+
+// CPU fequency hardcoded limit
+#define CONFIG_CPU_CLOCK_LIMIT_KHZ      25000
+// Desired CPU frequency
+#define CONFIG_CPU_CLOCK_HZ             20000000
+// XT1 oscillator frequency
+#define CONFIG_XT1_CLOCK_HZ             32768
+// Number of desired FreeRTOS ticks per second
+#define CONFIG_FREERTOS_TICK_RATE_HZ    1024
