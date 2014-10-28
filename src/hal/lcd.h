@@ -59,54 +59,39 @@
 #define LCD_HORIZONTAL_MAX                 96
 
 //*****************************************************************************
-//
 // Clears CS line
-//
 // This macro allows to clear the Chip Select (CS) line
-//
 // \return None
 //*****************************************************************************
-
 #define ClearCS()                    	\
        P3OUT &= ~BIT0;
 
-//*****************************************************************************
-//
-// Set CS line
-//
-// This macro allows to set the Chip Select (CS) line
-//
-// \return None
-//
-//*****************************************************************************
 
+//*****************************************************************************
+// Set CS line
+// This macro allows to set the Chip Select (CS) line
+// \return None
+//*****************************************************************************
 #define SetCS()                    	\
        P3OUT |= BIT0;
 
+
 //*****************************************************************************
-//
 // Waits until the SPI communication with the LCD is finished a command to
 // the LCD Driver
-//
 // \param None
-//
 // \return None
 //*****************************************************************************
-
 #define WaitUntilLcdWriteFinished()                \
         while  (UCB0STAT & UCBUSY)
 
+
 //*****************************************************************************
-//
 // Writes command or data to the LCD Driver
-//
 // \param ucCmdData is the 8 or 16 bit command to send to the LCD driver
 // Uses the SET_LCD_DATA macro
-//
 // \return None
-//
 //*****************************************************************************
-
 #define WriteCmdData(ucCmdData)                    	\
         do                                         	\
         {                                           \
@@ -116,11 +101,8 @@
         while(0)
 
 
-
 //*****************************************************************************
-//
 // Prototypes for the globals exported by this driver.
-//
 //*****************************************************************************
 void lcd_init(void);
 
@@ -128,9 +110,6 @@ void lcd_write(void *pvDisplayData);
 void lcd_clearScreen(void);
 void lcd_sendToggleVCOMCommand(void);
 
-
 uint8_t reverse(uint8_t x);
 
-
 #endif // __HAL_LCD_H__
-

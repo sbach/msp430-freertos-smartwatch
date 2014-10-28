@@ -42,13 +42,13 @@ void lcd_init(void)
 	// 8-bit data,
 	// Data is captured on the first UCLK edge and changed on the following edge
 	// SMCLK sources USCI clock
-	//UCCKPH => clock phase select - data capture on first UCLK
+	// UCCKPH => clock phase select - data capture on first UCLK
 	// UCMSB => MSB first
 	// UCMST => master mode select
 	// UCSYNC => synchro mode enable (SPI is synchronous communication)
-	//set UCSWRST before init USCI register and 
+	// set UCSWRST before init USCI register and 
 
-    UCB0CTL1 |= UCSWRST;
+	UCB0CTL1 |= UCSWRST;
 
 	UCB0CTL0 |= UCCKPH + UCMSB + UCMST + UCSYNC;
 	UCB0CTL1 |= UCSSEL_3;
@@ -85,7 +85,7 @@ void lcd_write(void *pvDisplayData)
 	uint8_t command = SHARP_LCD_CMD_WRITE_LINE;
 
 	//add VCOM inversion bit
-	command = command^VCOMbit;
+	command = command^SHARP_VCOM_TOGGLE_BIT;
 
 	//enable the communication on the bus
 	SetCS();
@@ -96,7 +96,7 @@ void lcd_write(void *pvDisplayData)
 	//disable the toggle for the other routine. We just do it now
 	flagSendToggleVCOMCommand = SHARP_SKIP_TOGGLE_VCOM_COMMAND;
 
-	#ifdef LANDSCAPE
+#ifdef LANDSCAPE
 	for(xj=0; xj<LCD_VERTICAL_MAX; xj++)
 	{
 		WriteCmdData(reverse(xj + 1));
@@ -123,7 +123,7 @@ void lcd_write(void *pvDisplayData)
 	}
 #endif
 
-
+	// send the trailer byte
 	WriteCmdData(SHARP_LCD_TRAILER_BYTE);
 
 	// Wait for last byte to be sent, then drop SCS
@@ -152,7 +152,7 @@ void lcd_clearScreen(void)
 	uint8_t command = SHARP_LCD_CMD_CLEAR_SCREEN;
 	
 	//add VCOM inversion bit
-	command = command^VCOMbit;
+	command = command^SHARP_VCOM_TOGGLE_BIT;
 
 	//enable communication via SPI
 	SetCS();
@@ -216,11 +216,11 @@ void lcd_sendToggleVCOMCommand(void)
 
 
 
-
+//*****************************************************************************
 //! Reverses the bit order.- Since the bit reversal function is called
 //! frequently by the several driver function this function is implemented
 //! to maximize code execution
-
+//*****************************************************************************
 const uint8_t referse_data[] = {0x0, 0x8, 0x4, 0xC, 0x2, 0xA, 0x6, 0xE, 0x1, 0x9, 0x5, 0xD, 0x3, 0xB, 0x7, 0xF};
 uint8_t reverse(uint8_t x)
 {
