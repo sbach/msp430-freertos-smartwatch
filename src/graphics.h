@@ -8,7 +8,11 @@
 #define COLOR_Black     0x00
 #define COLOR_White     0xff
 
+
+// Define a type Buffer to represent the LCD memory
+// 96 pixels by 96 pixels (12 8-bits words) 
 typedef uint8_t Buffer[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX/8];
+
 
 //*****************************************************************************
 //
@@ -34,28 +38,43 @@ typedef struct
 tRectangle;
 
 
-
-
+// initialize le local screen buffer with the given color
 void initializeDisplayBuffer(void *pvDisplayData, uint8_t ucValue);
 
+// draw a pixel on the point defined by X, Y, the color is given in parameter
 void pixelDraw(Buffer pvDisplayData, int8_t lX, int8_t lY,
 			    uint8_t ulValue);
 
+
+// fast method to draw a line horizontally. It needs the Y lines, the thickness
+// of the line. X1 and X2 are the start and the end points of this line.
 void lineHDraw(Buffer pvDisplayData, int8_t lX1, int8_t lX2,
 			    uint8_t thick, int8_t lY, uint8_t ulValue);
 
+
+// fast method to draw a line vertically. It draw the line in X, Y1 and Y2 are
+// the start and the end of this line.
 void lineVDraw(Buffer pvDisplayData, int8_t lX, int8_t lY1,
 			    int8_t lY2, uint8_t ulValue);
 
+
+// method to draw a line between two points. Bresenham algorithm used to draw in
+// in all possible orientations.
+void lineDraw(Buffer pvDisplayData, int8_t lX1, int8_t lY1, int8_t lx1, int8_t lY2, uint8_t ulValue);
+
+
+// draw a rectangle completelly filled
 void rectFill(Buffer pvDisplayData, const tRectangle *pRect,
 			    uint8_t ulValue);
 
+
+// draw a simple rectangle
 void rectDraw(Buffer pvDisplayData, const tRectangle *pRect,
 			    uint8_t ulValue);
 
+
+// draw a circle. Bresenham algorithm used for this method. 
 void circleDraw(Buffer pvDisplayData, uint8_t centerX,
 			    uint8_t centerY, uint8_t radius);
-//TODO CLEAR SCREEN  call the clear screen and clear the buffer with init buffer and a color
-
 
 #endif
