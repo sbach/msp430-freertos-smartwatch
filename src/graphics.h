@@ -4,10 +4,16 @@
 
 #include <stdint.h>
 #include "hal/lcd.h"
+#include "Fonts.h"
 
 #define COLOR_Black     0x00
 #define COLOR_White     0xff
 
+#define DRAW_OPT_BITWISE_OR           (0)
+#define DRAW_OPT_BITWISE_NOT          (1)
+#define DRAW_OPT_BITWISE_SET          (2)
+#define DRAW_OPT_BITWISE_DST_NOT      (3)
+#define DRAW_OPT_BITWISE_MASK         (0x03)
 
 // Define a type Buffer to represent the LCD memory
 // 96 pixels by 96 pixels (12 8-bits words) 
@@ -76,5 +82,8 @@ void rectDraw(Buffer pvDisplayData, const tRectangle *pRect,
 // draw a circle. Bresenham algorithm used for this method. 
 void circleDraw(Buffer pvDisplayData, uint8_t centerX,
 			    uint8_t centerY, uint8_t radius);
+
+
+void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font, unsigned char Op);
 
 #endif
