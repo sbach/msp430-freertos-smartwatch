@@ -1,6 +1,9 @@
 #include "graphics.h"
 #include "hal/lcd.h"
 
+// Global variable to handle the text cursor
+static unsigned char gColumn = 10;
+static unsigned char gRow = 5 ;
 
 //*****************************************************************************
 //
@@ -546,5 +549,33 @@ void circleDraw(Buffer pvDisplayData, uint8_t centerX, uint8_t centerY, uint8_t 
             x=x-1;
             radError = radError + 2*(y-x+1);
         }
+    }
+}
+
+
+void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font, unsigned char Op)
+{
+    tFont const *pFont = GetFont(Font);
+    unsigned char const *pBitmap = GetFontBitmap(Char, Font);
+    unsigned char CharWidth = GetCharWidth(Char, Font);
+
+    unsigned char MaskBit = 1; 
+    unsigned char Set;
+    unsigned char x, y;
+    
+    for (y = 0; y < pFont->Height; y++)
+    {
+        for (x = 0; x < CharWidth; x++)
+        {
+            if(pBitmap[y] & (MaskBit<<x)){
+                pixelDraw(pvDisplayData, gColumn+x, gRow+y, COLOR_Black);
+            }
+        }
+    }
+    if(gColumn + CharWidth+3>LCD_HORIZONTAL_MAX){
+        gColumn = 5;
+        gRow = gRow + pFont->Height +2;
+    }else{
+        gColumn = gColumn + CharWidth;
     }
 }
