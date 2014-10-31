@@ -84,6 +84,8 @@ void circleDraw(Buffer pvDisplayData, uint8_t centerX,
 			    uint8_t centerY, uint8_t radius);
 
 
+void DrawString(Buffer pvDisplayData, char const *pString, etFontType Font, unsigned char Op);
+
 void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font, unsigned char Op);
 
 #endif
