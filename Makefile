@@ -156,7 +156,8 @@ install: $(OUTDIR)/firmware.elf
 
 debug:
 	@echo "Starting mspdebug..."
-	sudo mspdebug --force-reset $(MSPDEBUG_DRIVER) gdb
+	@sudo mspdebug --force-reset $(MSPDEBUG_DRIVER) gdb &> /dev/null
+	@$(GDB) -nx -x .gdbinit -- $(OUTDIR)/firmware.elf
 
 clear: clean
 	@rm -Rf ./include/config.h
