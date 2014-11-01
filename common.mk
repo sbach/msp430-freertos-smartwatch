@@ -13,14 +13,18 @@ CFLAGS		+= -Wall -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align \
 		-Wsign-compare -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes \
 		-Wmissing-declarations -Wunused
 
-LDFLAGS		= -T./ldscripts/msp430f5438.ld
-
 # Depend flags
 CFLAGS		+= -MMD
 
 # MSP430 data model flags
 CFLAGS_DMS	+= -D__DATA_MODEL_SMALL__ -msmall
 CFLAGS_DML	+= -D__DATA_MODEL_LARGE__ -mlarge
+
+# Specific linker script for each data model
+# @note: The small model (16 bit) cannot 'JUMP' into the far ROM,
+#        using this section would cause code relocation failure.
+LDFLAGS_DMS	+= -T./ldscripts/msp430f5438-s.ld
+LDFLAGS_DML	+= -T./ldscripts/msp430f5438-l.ld
 
 # Release flags (Use dead code elimination flags,
 # @see: http://gcc.gnu.org/ml/gcc-help/2003-08/msg00128.html)

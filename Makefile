@@ -88,8 +88,10 @@ ifneq ($(wildcard include/config.h), )
 
 	ifeq ($(MODEL_SMALL),)
 		CFLAGS	+= $(CFLAGS_DML)
+		LDFLAGS	+= $(LDFLAGS_DML)
 	else ifeq ($(MODEL_LARGE),)
 		CFLAGS	+= $(CFLAGS_DMS)
+		LDFLAGS	+= $(LDFLAGS_DMS)
 	endif
 
 endif
