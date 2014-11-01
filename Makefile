@@ -159,6 +159,9 @@ debug:
 	@sudo mspdebug --force-reset $(MSPDEBUG_DRIVER) gdb &> /dev/null
 	@$(GDB) -nx -x .gdbinit -- $(OUTDIR)/firmware.elf
 
+size: $(OUTDIR)/firmware.elf
+	@$(SIZE) $(OUTDIR)/firmware.elf
+
 clear: clean
 	@rm -Rf ./include/config.h
 	@rm -Rf ./include/config.h.old

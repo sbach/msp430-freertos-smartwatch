@@ -40,4 +40,5 @@ LD		= msp430-elf-ld
 AS		= msp430-elf-as
 AR		= msp430-elf-ar
 OBJCOPY	= msp430-elf-objcopy
+SIZE	= msp430-elf-size
 GDB		= msp430-elf-gdb
