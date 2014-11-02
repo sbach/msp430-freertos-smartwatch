@@ -1,7 +1,7 @@
 // #define CONFIG_DEBUG
 #define CONFIG_DATA_MODEL_SMALL
 // #define CONFIG_DATA_MODEL_LARGE
-
+// #define CONFIG_LOGGING
 
 // CPU fequency hardcoded limit
 #define CONFIG_CPU_CLOCK_LIMIT_KHZ      25000
