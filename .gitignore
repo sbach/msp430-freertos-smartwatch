@@ -2,7 +2,6 @@
 build/
 include/config.h
 include/config.h.old
-build.log
 
 # Object files
 *.o

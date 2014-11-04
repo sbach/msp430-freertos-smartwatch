@@ -39,7 +39,7 @@ CC_CHECK = @if test -e tmp.err; \
 	elif test -s tmp.log; \
 		then printf "$(BOLD)$(YELLOW)[WARN]$(NORMAL)\n"; \
 	else printf "$(BOLD)$(GREEN)[OK]$(NORMAL)\n"; fi; \
-	cat tmp.log >> build.log; \
+	cat tmp.log; \
 	rm -f tmp.err tmp.log;
 
 
@@ -163,4 +163,4 @@ clear: clean
 	@rm -Rf ./include/config.h.old
 
 clean:
-	@rm -Rf ./$(OUTDIR)/ build.log
+	@rm -Rf ./$(OUTDIR)/
