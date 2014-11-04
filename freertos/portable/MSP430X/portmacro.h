@@ -10,11 +10,14 @@
 #define portSHORT		int
 #define portBASE_TYPE	portSHORT
 
+#define portPOINTER_SIZE_TYPE uintptr_t
+
 #ifdef __DATA_MODEL_LARGE__
 	#define portSTACK_TYPE uint32_t
 #else
 	#define portSTACK_TYPE uint16_t
 #endif
+
 
 typedef portSTACK_TYPE StackType_t;
 typedef short BaseType_t;

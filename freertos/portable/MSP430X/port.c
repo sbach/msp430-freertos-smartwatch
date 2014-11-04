@@ -28,7 +28,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	{
 		pulTopOfStack = ( uint32_t * ) pxTopOfStack;
 	}
-	*pulTopOfStack = ( uint32_t ) pxCode;
+	*pulTopOfStack = ( uint32_t ) ( ( portPOINTER_SIZE_TYPE ) pxCode );
 
 	pusTopOfStack = ( uint16_t * ) pulTopOfStack;
 	pusTopOfStack--;
@@ -44,7 +44,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) 0xdddd;
 	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) ( ( portPOINTER_SIZE_TYPE ) pvParameters );
 	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) 0xbbbb;
 	pxTopOfStack--;
@@ -64,7 +64,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	pxTopOfStack--;
 #else
 	pxTopOfStack -= 3;
-	*pxTopOfStack = ( StackType_t ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) ( ( portPOINTER_SIZE_TYPE ) pvParameters );
 	pxTopOfStack -= 9;
 #endif
 
