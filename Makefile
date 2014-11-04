@@ -42,12 +42,6 @@ CC_CHECK = @if test -e tmp.err; \
 	cat tmp.log >> build.log; \
 	rm -f tmp.err tmp.log;
 
-CMD_CHECK = @if test -e tmp.err; \
-	then printf "$(BOLD)$(RED)[ERR]$(NORMAL)\n"; \
-	else printf "$(BOLD)$(GREEN)[OK]$(NORMAL)\n"; fi; \
-	cat tmp.log >> build.log; \
-	rm -f tmp.err tmp.log;
-
 
 # ****************************************************************************************
 # Targets
