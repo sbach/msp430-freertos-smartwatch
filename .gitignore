@@ -1,7 +1,8 @@
 # Project specific
 build/
-include/config.h
+include/config.h.in
 include/config.h.old
+main.c
 
 # Object files
 *.o
