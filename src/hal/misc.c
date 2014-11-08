@@ -12,22 +12,22 @@
  * \param void
  * \return void
  ******************************************************************************/
-void halSetupClockAndPowerManagment(void) {
+void hal_setup_clock_pmm(void) {
 
     // Set the only supported PMMCOREVx (for MSP430F5438)
     // The system frequency can operate in the 0-18MHz range
     // @see slau208n.pdf, page 135
     // @see slas612e.pdf, page 15 (device specific)
-    SetVCore(PMMCOREV_2);
+    ti_hal_set_vcore(PMMCOREV_2);
 
     // Setup XT1 pins, P7.0 (XIN) and P7.1 (XOUT)
     P7SEL |= BIT0 + BIT1;
 
     // Select the internal capacitor for XT1
-    SetXCAP(3);
+    ti_hal_set_xcap(3);
 
     // Start XT1, 32kHz crystal, in LF mode
-    while(!LFXT_Start_Timeout(XT1DRIVE_0, 50000));
+    while(!ti_hal_lfxt_start_timeout(XT1DRIVE_0, 50000));
 
     // Set the reference clocks for the auxiliray clock
     SELECT_ACLK(SELA__XT1CLK);
@@ -41,16 +41,16 @@ void halSetupClockAndPowerManagment(void) {
 
     // Convert a Hz value to a KHz value, as required
     //  by the Init_FLL_Settle() function.
-    unsigned long ulCPU_Clock_KHz = CONFIG_CPU_CLOCK_HZ / 1000UL;
+    unsigned long cpu_clock_khz = CONFIG_CPU_CLOCK_HZ / 1000UL;
 
     //Make sure we aren't overclocking
-    if(ulCPU_Clock_KHz > CONFIG_CPU_CLOCK_LIMIT_KHZ) {
-        ulCPU_Clock_KHz = CONFIG_CPU_CLOCK_LIMIT_KHZ;
+    if(cpu_clock_khz > CONFIG_CPU_CLOCK_LIMIT_KHZ) {
+        cpu_clock_khz = CONFIG_CPU_CLOCK_LIMIT_KHZ;
     }
 
     // Init the FLL and DCO with the requested frequency (in KHz)
     // Also set the reference clocks for the master and sub-system master clock
-    Init_FLL_Settle((unsigned short)ulCPU_Clock_KHz, ratio);
+    ti_hal_init_fll_settle((unsigned short) cpu_clock_khz, ratio);
 
     // Set SCG0 bits in the status register.
     // Disable the FLL control loop

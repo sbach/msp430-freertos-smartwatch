@@ -46,7 +46,7 @@
  * \param xtdrive  drive setting (XT1DRIVE_0 = lowest current consumption)
  * \param timeout  how long to check for the oscillator to stabilize
  ******************************************************************************/
-unsigned int LFXT_Start_Timeout(unsigned int xtdrive, unsigned int timeout) {
+unsigned int ti_hal_lfxt_start_timeout(unsigned int xtdrive, unsigned int timeout) {
 
     // Maximum drive capability and maximum current consumption for XT1 LF mode
     // Start with the highest supply current for reliable and quick startup.
@@ -80,7 +80,7 @@ unsigned int LFXT_Start_Timeout(unsigned int xtdrive, unsigned int timeout) {
  *
  * \param xcap  requested capacitor XCAPx, 2 pF, 6 pF, 9 pF, or 12 pF (default)
  ******************************************************************************/
-unsigned int SetXCAP(unsigned int xcap) {
+unsigned int ti_hal_set_xcap(unsigned int xcap) {
 
     // Convert the number to the correct XCAPx value,
     // and prevent value overflow with a mask.
@@ -102,7 +102,7 @@ unsigned int SetXCAP(unsigned int xcap) {
  * \param ratio     the multiplier to get the requested frequency from the
  *                  reference clock frequency (XT1 by default)
  ******************************************************************************/
-void Init_FLL_Settle(unsigned int fsystem, unsigned int ratio)
+void ti_hal_init_fll_settle(unsigned int fsystem, unsigned int ratio)
 {
     volatile unsigned int x = ratio * 32;
 
@@ -111,7 +111,7 @@ void Init_FLL_Settle(unsigned int fsystem, unsigned int ratio)
 
     __bic_SR_register(SCG0);        // Enable FLL loop control
 
-    Init_FLL(fsystem, ratio);       // Configure the FLL
+    ti_hal_init_fll(fsystem, ratio);       // Configure the FLL
 
     // Wait for a few cycles for the DCO to settle on the proper tap for
     // normal operation. Worst case is (n * 32 * 32) f_FLLREFCLK cycles.
@@ -132,7 +132,7 @@ void Init_FLL_Settle(unsigned int fsystem, unsigned int ratio)
  * \param ratio     the multiplier to get the requested frequency from the
  *                  reference clock frequency (XT1 by default)
  ******************************************************************************/
-void Init_FLL(unsigned int fsystem, unsigned int ratio)
+void ti_hal_init_fll(unsigned int fsystem, unsigned int ratio)
 {
     unsigned int mul_div, dco_div;
     unsigned int mode = 0;      // Will use DCOCLKDIV (default)

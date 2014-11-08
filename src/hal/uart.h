@@ -18,10 +18,10 @@
  * Prototypes
  ******************************************************************************/
 
-void halDebugUARTInit( void );
-void halDebugUARTWrite(const char *buf);
+void hal_init_debug_uart( void );
+void hal_debug_uart_write(const char *buf);
 
-void __attribute__ ( ( interrupt(USCI_A1_VECTOR) ) ) halDebugUARTISR( void );
+void __attribute__ ( ( interrupt(USCI_A1_VECTOR) ) ) hal_debug_uart_isr( void );
 
 #endif /* HAL_UART_H */
 

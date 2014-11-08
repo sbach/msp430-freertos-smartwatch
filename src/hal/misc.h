@@ -6,6 +6,6 @@
  * Prototypes
  ******************************************************************************/
 
-void halSetupClockAndPowerManagment(void);
+void hal_setup_clock_pmm(void);
 
 #endif /* HAL_MISC_H */

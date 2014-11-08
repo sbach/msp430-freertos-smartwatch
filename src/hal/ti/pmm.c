@@ -46,7 +46,7 @@
  * \param level     Level to which Vcore needs to be increased
  * \return status   Success/failure
  ******************************************************************************/
-static unsigned int SetVCoreUp(unsigned char level)
+static unsigned int ti_hal_vcore_up(unsigned char level)
 {
     unsigned int PMMRIE_backup, SVSMHCTL_backup, SVSMLCTL_backup;
 
@@ -158,7 +158,7 @@ static unsigned int SetVCoreUp(unsigned char level)
  * \param  level    Level to which Vcore needs to be decreased
  * \return status   Success/failure
  ******************************************************************************/
-static unsigned int SetVCoreDown(unsigned char level)
+static unsigned int ti_hal_vcore_down(unsigned char level)
 {
     unsigned int PMMRIE_backup, SVSMHCTL_backup, SVSMLCTL_backup;
 
@@ -233,7 +233,7 @@ static unsigned int SetVCoreDown(unsigned char level)
  * \param  level    Level to which Vcore needs to be decreased
  * \return status   Success/failure
  ******************************************************************************/
-unsigned int SetVCore(unsigned char level)
+unsigned int ti_hal_set_vcore(unsigned char level)
 {
     unsigned int actlevel;
     unsigned int status;
@@ -245,9 +245,9 @@ unsigned int SetVCore(unsigned char level)
     // Step by step increase or decrease
     while (((level != actlevel) && (status == 0)) || (level < actlevel)) {
         if (level > actlevel) {
-            status = SetVCoreUp(++actlevel);
+            status = ti_hal_vcore_up(++actlevel);
         }  else {
-            status = SetVCoreDown(--actlevel);
+            status = ti_hal_vcore_down(--actlevel);
         }
     }
 

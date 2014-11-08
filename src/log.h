@@ -12,12 +12,12 @@
 
 #ifdef CONFIG_LOGGING
 
-void EnableLogging( void );
-void Log( const char *fmt, ... );
+void enable_logging( void );
+void slog( const char *fmt, ... );
 
 #else
 
-#define Log(_x, ...) {}
+#define slog(_x, ...) {}
 
 #endif /* CONFIG_LOGGING */
 

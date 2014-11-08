@@ -156,6 +156,6 @@
  * Prototypes
  ******************************************************************************/
 
-unsigned int SetVCore(unsigned char level);
+unsigned int ti_hal_set_vcore(unsigned char level);
 
 #endif /* HAL_PMM_H */

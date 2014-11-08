@@ -9,10 +9,10 @@
 #ifdef CONFIG_LOGGING
 
 // Mutex for the debug UART interface access
-static xSemaphoreHandle UARTLoggingMutex;
+static xSemaphoreHandle uart_logging_mutex;
 
 // Text buffer used to print on the UART interface
-char LoggingBuffer[50];
+static char logging_buffer[50];
 
 
 /*******************************************************************************
@@ -22,15 +22,15 @@ char LoggingBuffer[50];
  * \param void
  * \return void
  ******************************************************************************/
-void EnableLogging( void )
+void enable_logging( void )
 {
-    if(!UARTLoggingMutex) {
+    if(!uart_logging_mutex) {
         // Enable the debug UART interface on P10.4 and P10.5
-        halDebugUARTInit();
+        hal_init_debug_uart();
 
         // Create a mutex to synchronize access to the buffer
-        UARTLoggingMutex = xSemaphoreCreateMutex();
-        xSemaphoreGive(UARTLoggingMutex);
+        uart_logging_mutex = xSemaphoreCreateMutex();
+        xSemaphoreGive(uart_logging_mutex);
     }
 }
 
@@ -41,25 +41,25 @@ void EnableLogging( void )
  * \param ...       Argument list
  * \return void
  ******************************************************************************/
-void Log( const char *fmt, ... )
+void slog( const char *fmt, ... )
 {
     // Take the mutex
-    xSemaphoreTake(UARTLoggingMutex, portMAX_DELAY);
+    xSemaphoreTake(uart_logging_mutex, portMAX_DELAY);
 
     va_list va;
     va_start(va,fmt);
-    vuprintf(LoggingBuffer, fmt, va);
+    vuprintf(logging_buffer, fmt, va);
     va_end(va);
 
     // Write the string to the UART debug interface
-    halDebugUARTWrite(LoggingBuffer);
+    hal_debug_uart_write(logging_buffer);
 
     // Add EOL characters
     WRITE_DEBUG_UART('\r');
     WRITE_DEBUG_UART('\n');
 
     // Give the mutex
-    xSemaphoreGive(UARTLoggingMutex);
+    xSemaphoreGive(uart_logging_mutex);
 }
 
 #endif /* CONFIG_LOGGING */

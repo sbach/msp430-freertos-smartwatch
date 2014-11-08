@@ -72,9 +72,9 @@
  * Prototypes
  ******************************************************************************/
 
-unsigned int LFXT_Start_Timeout(unsigned int xtdrive, unsigned int timeout);
-unsigned int SetXCAP(unsigned int xcap);
-void Init_FLL_Settle(unsigned int fsystem, unsigned int ratio);
-void Init_FLL(unsigned int fsystem, unsigned int ratio);
+unsigned int ti_hal_lfxt_start_timeout(unsigned int xtdrive, unsigned int timeout);
+unsigned int ti_hal_set_xcap(unsigned int xcap);
+void ti_hal_init_fll_settle(unsigned int fsystem, unsigned int ratio);
+void ti_hal_init_fll(unsigned int fsystem, unsigned int ratio);
 
 #endif /* HAL_UCS_H */

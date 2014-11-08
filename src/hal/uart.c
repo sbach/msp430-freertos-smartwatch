@@ -8,7 +8,7 @@
  * \param void
  * \return void
  ******************************************************************************/
-void halDebugUARTInit( void )
+void hal_init_debug_uart( void )
 {
     // Set P5.4 and P5.6 to UCA function
     P5SEL |= BIT5;
@@ -59,7 +59,7 @@ void halDebugUARTInit( void )
  * \param const char *  Text to write
  * \return void
  ******************************************************************************/
-void halDebugUARTWrite(const char *buf)
+void hal_debug_uart_write(const char *buf)
 {
     // Send each character to the TX buffer
     while (*buf) WRITE_DEBUG_UART(*buf++);
@@ -74,7 +74,7 @@ void halDebugUARTWrite(const char *buf)
  * \param void
  * \return void
  ******************************************************************************/
-void __attribute__ ( ( interrupt(USCI_A1_VECTOR) ) ) halDebugUARTISR( void )
+void __attribute__ ( ( interrupt(USCI_A1_VECTOR) ) ) hal_debug_uart_isr( void )
 {
     switch (__even_in_range(UCA1IV,4)) {
         case UART_NO_INTERRUPT:

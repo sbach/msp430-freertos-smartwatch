@@ -32,22 +32,22 @@ static const unsigned long dv[] = {
 };
 
 
-static void putchar(char **str, unsigned c) {
+static void sputchar(char **str, unsigned c) {
     *(*str)++ = c;
 }
 
-static void putstr(char **str, char *s) {
-    while(*s) putchar(str, *s++);
+static void sputstr(char **str, char *s) {
+    while(*s) sputchar(str, *s++);
 }
 
-static void puthex(char **str, unsigned n)
+static void sputhex(char **str, unsigned n)
 {
     static const char hex[16] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-    putchar(str, hex[n & 15]);
+    sputchar(str, hex[n & 15]);
 }
 
 
-static void xtoa(char **str, unsigned long x, const unsigned long *dp)
+static void sxtoa(char **str, unsigned long x, const unsigned long *dp)
 {
     char c;
     unsigned long d;
@@ -57,10 +57,10 @@ static void xtoa(char **str, unsigned long x, const unsigned long *dp)
             d = *dp++;
             c = '0';
             while(x >= d) ++c, x -= d;
-            putchar(str, c);
+            sputchar(str, c);
         } while(!(d & 1));
     } else
-        putchar(str, '0');
+        sputchar(str, '0');
 }
 
 
@@ -70,39 +70,39 @@ void vuprintf(char *str, const char *format, va_list a)
     int i;
     long n;
 
-    while(c = *format++) {
+    while((c = *format++)) {
         if(c == '%') {
             switch(c = *format++) {
                 case 's':                       // String
-                    putstr(&str, va_arg(a, char*));
+                    sputstr(&str, va_arg(a, char*));
                     break;
                 case 'c':                       // Char
-                    putchar(&str, va_arg(a, unsigned));
+                    sputchar(&str, va_arg(a, unsigned));
                     break;
                 case 'i':                       // 16 bit Integer
                 case 'u':                       // 16 bit Unsigned
                     i = va_arg(a, int);
-                    if(c == 'i' && i < 0) i = -i, putchar(&str, '-');
-                    xtoa(&str, (unsigned)i, dv + 5);
+                    if(c == 'i' && i < 0) i = -i, sputchar(&str, '-');
+                    sxtoa(&str, (unsigned)i, dv + 5);
                     break;
                 case 'l':                       // 32 bit Long
                 case 'n':                       // 32 bit uNsigned loNg
                     n = va_arg(a, long);
-                    if(c == 'l' &&  n < 0) n = -n, putchar(&str, '-');
-                    xtoa(&str, (unsigned long)n, dv);
+                    if(c == 'l' &&  n < 0) n = -n, sputchar(&str, '-');
+                    sxtoa(&str, (unsigned long)n, dv);
                     break;
                 case 'x':                       // 16 bit heXadecimal
                     i = va_arg(a, int);
-                    puthex(&str, i >> 12);
-                    puthex(&str, i >> 8);
-                    puthex(&str, i >> 4);
-                    puthex(&str, i);
+                    sputhex(&str, i >> 12);
+                    sputhex(&str, i >> 8);
+                    sputhex(&str, i >> 4);
+                    sputhex(&str, i);
                     break;
                 case 0: return;
                 default: goto bad_fmt;
             }
         } else
-bad_fmt:    putchar(&str, c);
+bad_fmt:    sputchar(&str, c);
     }
-    putchar(&str, 0);
+    sputchar(&str, 0);
 }

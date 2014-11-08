@@ -28,7 +28,7 @@ int main( void )
     WDTCTL = WDTPW + WDTHOLD;
 
     // Setup the UCS and PMM
-    halSetupClockAndPowerManagment();
+    hal_setup_clock_pmm();
 
     // Start the scheduler
     vTaskStartScheduler();
