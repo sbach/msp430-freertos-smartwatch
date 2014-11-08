@@ -12,7 +12,6 @@
 
 // HAL includes
 #include "hal/misc.h"
-#include "hal/timer.h"
 
 #include "log.h"
 
@@ -36,9 +35,6 @@ int main( void )
 #ifdef CONFIG_LOGGING
     enable_logging();
 #endif
-
-    // Initialize the TimerA0
-    hal_timer_a0_init();
 
     // Start the scheduler
     vTaskStartScheduler();
@@ -64,8 +60,26 @@ void vApplicationTickHook( void )
 // case configTICK_VECTOR is set to TIMER0_A0_VECTOR.
 void vApplicationSetupTimerInterrupt( void )
 {
-    // Register the special slot for the FreeRTOS tick
-    hal_timer_a0_register(TIMER_A0_SLOT0, CONFIG_FREERTOS_TICK_COUNT, NULL);
+    // Ensure the timer is stopped
+    TA0CTL = 0;
+
+    // Run the timer from the ACLK
+    TA0CTL = TASSEL_1;
+
+    // Clear everything to start with
+    TA0CTL |= TACLR;
+
+    // Set the compare match value according to the tick rate we want
+    TA0CCR0 = CONFIG_XT1_CLOCK_HZ / CONFIG_FREERTOS_TICK_RATE_HZ;
+
+    // Enable the interrupts
+    TA0CCTL0 = CCIE;
+
+    // Start up clean.
+    TA0CTL |= TACLR;
+
+    // Up mode
+    TA0CTL |= MC_1;
 }
 
 void vApplicationIdleHook( void )
