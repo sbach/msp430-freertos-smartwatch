@@ -3,6 +3,7 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 
+#include "utils/vuprintf.h"
 #include "log.h"
 
 
