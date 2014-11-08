@@ -13,6 +13,8 @@
 // HAL includes
 #include "hal/misc.h"
 
+#include "log.h"
+
 
 // Prototypes
 void vApplicationTickHook( void );
@@ -29,6 +31,10 @@ int main( void )
 
     // Setup the UCS and PMM
     hal_setup_clock_pmm();
+
+#ifdef CONFIG_LOGGING
+    enable_logging();
+#endif
 
     // Start the scheduler
     vTaskStartScheduler();
