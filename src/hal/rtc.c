@@ -73,6 +73,18 @@ void hal_rtc_a_set_datetime( rtcdatetime_t* data )
     // Stop the RTC_A
     RTCCTL01 |= RTCHOLD;
 
+#ifdef __MSP430F5438__
+    // Write the date/time in the registers using the
+    // workaround provided by TI for F543x (non A) models
+    // @see slaz289j.pdf, page 30
+    ti_hal_rtc_a_set_year_fix(data->year);
+    ti_hal_rtc_a_set_month_fix(data->month);
+    ti_hal_rtc_a_set_day_fix(data->day);
+    ti_hal_rtc_a_set_dayofweek_fix(data->dayofweek);
+    ti_hal_rtc_a_set_hour_fix(data->hour);
+    ti_hal_rtc_a_set_minute_fix(data->minute);
+    ti_hal_rtc_a_set_second_fix(data->second);
+#else
     // Write the date/time in the registers
     RTCYEAR = data->year;
     RTCMON  = data->month;
@@ -81,6 +93,7 @@ void hal_rtc_a_set_datetime( rtcdatetime_t* data )
     RTCHOUR = data->hour;
     RTCMIN  = data->minute;
     RTCSEC  = data->second;
+#endif
 
     // Enable the RTC
     RTCCTL01 &= ~RTCHOLD;

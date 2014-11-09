@@ -16,6 +16,7 @@ SRCS = $(SOURCE_PATH)/main.c \
 	$(SOURCE_PATH)/hal/rtc.c \
 	$(SOURCE_PATH)/hal/uart.c \
 	$(SOURCE_PATH)/hal/timer.c \
+	$(SOURCE_PATH)/hal/ti/rtc_a_fix.S \
 	$(SOURCE_PATH)/hal/ti/ucs.c \
 	$(SOURCE_PATH)/hal/ti/pmm.c \
 	$(SOURCE_PATH)/utils/vuprintf.c \
