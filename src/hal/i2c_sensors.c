@@ -4,15 +4,23 @@
 #include <stdint.h>
 #include "i2c_sensors.h"
 
-
+/*******************************************************************************
+ * \brief  Init the i2c bus for communication with sensors
+ *
+ * \param void
+ * \return void
+ ******************************************************************************/
 void i2c_sensors_init(void)
 {	
 
-    // I2C SDA PIN for I2C mode
+    // I2C SDA PIN for I2C mode (P3.7)
 	P3SEL |= BIT7;
 	
-	// I2C_SCL_PIN for I2C mode
+	// I2C_SCL_PIN for I2C mode (P5.4)
 	P5SEL |= BIT4;
+
+	// set UCSWRST before init USCI register
+	UCB1CTL1 |= UCSWRST;
 
     // config is on slau208n page 950
 	// Configure USCB1 for I2C mode:
@@ -20,12 +28,12 @@ void i2c_sensors_init(void)
 	// UCMODE_3 - I2C mode,
 	// 7-bits addresses
 	// UCSYNC - synchronous mode enable - I2C is synchronous communication
-	// set UCSWRST before init USCI register and 
-
-	UCB1CTL1 |= UCSWRST;
-
 	UCB0CTL0 |= UCMST + UCMODE_3 + UCSYNC;
+
+	// Clock selection : SMCLK
 	UCB0CTL1 |= UCSSEL_3;
+	
+	// baud rate prescaler 
 	UCB0BR0 = 0x0C;
 	UCB0BR1 = 0;	//fSCL = SMCLK/12
 
@@ -33,7 +41,28 @@ void i2c_sensors_init(void)
 	UCB1CTL1 &= ~UCSWRST;
 }
 
+/*******************************************************************************
+ * \brief   write one or more words in the sensor registers
+ *
+ * \param uint8_t sensor's address 
+ * \param uint8_t * pData is the pointer to the data to be written
+ * \param uint8_t length of the data sent
+ * \return void
+ ******************************************************************************/
 void i2c_sensors_write(uint8_t addr, uint8_t *pData, uint8_t length)
+{
+
+}
+
+/*******************************************************************************
+ * \brief   read the data in the i2c bus.
+ *
+ * \param uint8_t sensor's address 
+ * \param uint8_t * pData is the pointer to the data to be written
+ * \param uint8_t length of the data sent
+ * \return void
+ ******************************************************************************/
+void i2c_sensors_read(uint8_t addr, uint8_t *pData, uint8_t length)
 {
 
 }
@@ -47,32 +76,22 @@ void i2c_sensors_write(uint8_t addr, uint8_t *pData, uint8_t length)
  ******************************************************************************/
 void __attribute__ ( ( interrupt(USCI_B1_VECTOR) ) ) i2c_sensors_ISR( void )
 {
-    switch (__even_in_range(UCA1IV,4)) {
-        case UART_NO_INTERRUPT:
+    switch (__even_in_range(UCB1IV,12)) {
+        case I2C_SENSORS_NO_INTERRUPTS:
             break;
-        case UART_RX_IFG:
-            UCA1IFG  &= ~UCRXIFG;
-            UCA1TXBUF = UCA1RXBUF;
+        case I2C_SENSORS_ALIFG:
             break;
-        case UART_TX_IFG:
+        case I2C_SENSORS_NACKIFG:
             break;
+        case I2C_SENSORS_STTIFG:
+    		break;
+		case I2C_SENSORS_STPIFG:
+    		break;
+    	case I2C_SENSORS_RXIFG:
+    		break;
+		case I2C_SENSORS_TXIFG:
+			break;
         default:
             break;
     }
-}
-
-
-//*****************************************************************************
-//! Reverses the bit order.- Since the bit reversal function is called
-//! frequently by the several driver function this function is implemented
-//! to maximize code execution
-//*****************************************************************************
-const uint8_t referse_data[] = {0x0, 0x8, 0x4, 0xC, 0x2, 0xA, 0x6, 0xE, 0x1, 0x9, 0x5, 0xD, 0x3, 0xB, 0x7, 0xF};
-uint8_t reverse(uint8_t x)
-{
-  uint8_t b = 0;
-
-  b  = referse_data[x & 0xF]<<4;
-  b |= referse_data[(x & 0xF0)>>4];
-  return b;
 }
