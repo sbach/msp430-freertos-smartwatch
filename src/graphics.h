@@ -84,8 +84,10 @@ void circleDraw(Buffer pvDisplayData, uint8_t centerX,
 			    uint8_t centerY, uint8_t radius);
 
 
+// draw a string. call DrawChar for each string's element.
 void DrawString(Buffer pvDisplayData, char const *pString, etFontType Font);
 
+// draw a single character.
 void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font);
 
 #endif

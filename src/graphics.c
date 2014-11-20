@@ -553,6 +553,21 @@ void circleDraw(Buffer pvDisplayData, uint8_t centerX, uint8_t centerY, uint8_t 
 }
 
 
+//*****************************************************************************
+//
+//! Draw a String.
+//!
+//! \param pvDisplayData is a pointer to the driver-specific data for this
+//! display driver.
+//! \param pString is the the string that we want to draw.
+//! \param Font is the type of Font we want to use.
+//!
+//! This function draws a string on the display.
+//!
+//! \return None.
+//
+//*****************************************************************************
+
 void DrawString(Buffer pvDisplayData, char const *pString, etFontType Font)
 {
     while (*pString)
@@ -560,6 +575,22 @@ void DrawString(Buffer pvDisplayData, char const *pString, etFontType Font)
         DrawChar(pvDisplayData, *pString++, Font);
     }
 }
+
+
+//*****************************************************************************
+//
+//! Draw a Char.
+//!
+//! \param pvDisplayData is a pointer to the driver-specific data for this
+//! display driver.
+//! \param Char is the the character we want to draw.
+//! \param Font is the type of Font we want to use.
+//!
+//! This function draws a single character on the display.
+//!
+//! \return None.
+//
+//*****************************************************************************
 
 void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font)
 {
