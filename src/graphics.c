@@ -553,15 +553,15 @@ void circleDraw(Buffer pvDisplayData, uint8_t centerX, uint8_t centerY, uint8_t 
 }
 
 
-void DrawString(Buffer pvDisplayData, char const *pString, etFontType Font, unsigned char Op)
+void DrawString(Buffer pvDisplayData, char const *pString, etFontType Font)
 {
     while (*pString)
     {
-        DrawChar(pvDisplayData, *pString++, Font, Op);
+        DrawChar(pvDisplayData, *pString++, Font);
     }
 }
 
-void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font, unsigned char Op)
+void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font)
 {
     tFont const *pFont = GetFont(Font);
     unsigned char const *pBitmap = GetFontBitmap(Char, Font);
