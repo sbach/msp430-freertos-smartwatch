@@ -626,3 +626,57 @@ void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font)
         gColumn = gColumn + CharWidth;
     }
 }
+
+
+//*****************************************************************************
+//
+//! Draw the Time.
+//!
+//! \param pvDisplayData is a pointer to the driver-specific data for this
+//! display driver.
+//! \param hours : the current hour we want to draw.
+//! \param minutes : the current minutes we want to draw.
+//! \param Font is the type of Font we want to use.
+//!
+//! This function draws the complete time on the display.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void DrawTime(Buffer pvDisplayData, char const * hours, char const * minutes, etFontType Font)
+{
+    gRow = DEFAULT_HOURS_ROW;
+    gColumn = DEFAULT_HOURS_COL;
+
+    DrawString(pvDisplayData, hours, Font);
+
+    DrawString(pvDisplayData, ":", TimeG);
+
+    gRow = DEFAULT_MINS_ROW;
+    gColumn = DEFAULT_MINS_COL;
+
+    DrawString(pvDisplayData, minutes, Font);
+}
+
+
+//*****************************************************************************
+//
+//! Draw the Date.
+//!
+//! \param pvDisplayData is a pointer to the driver-specific data for this
+//! display driver.
+//! \param date: the current date given as String we want to draw.
+//! \param Font is the type of Font we want to use.
+//!
+//! This function draws the complete time on the display.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void DrawDate(Buffer pvDisplayData, char const * date, etFontType Font)
+{
+    gRow = DEFAULT_DATE_ROW;
+    gColumn = DEFAULT_DATE_COL;
+
+    DrawString(pvDisplayData, date, Font);
+}

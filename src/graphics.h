@@ -9,11 +9,13 @@
 #define COLOR_Black     0x00
 #define COLOR_White     0xff
 
-#define DRAW_OPT_BITWISE_OR           (0)
-#define DRAW_OPT_BITWISE_NOT          (1)
-#define DRAW_OPT_BITWISE_SET          (2)
-#define DRAW_OPT_BITWISE_DST_NOT      (3)
-#define DRAW_OPT_BITWISE_MASK         (0x03)
+#define DEFAULT_HOURS_ROW	2 
+#define DEFAULT_HOURS_COL	2
+#define DEFAULT_MINS_ROW	2
+#define DEFAULT_MINS_COL	52
+
+#define DEFAULT_DATE_ROW	70
+#define DEFAULT_DATE_COL	10
 
 // Define a type Buffer to represent the LCD memory
 // 96 pixels by 96 pixels (12 8-bits words) 
@@ -90,4 +92,9 @@ void DrawString(Buffer pvDisplayData, char const *pString, etFontType Font);
 // draw a single character.
 void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font);
 
+// draw the time always at the same place
+void DrawTime(Buffer pvDisplayData, char const * hours, char const * minutes, etFontType Font);
+
+// draw the date at the specified place
+void DrawDate(Buffer pvDisplayData, char const * date, etFontType Font);
 #endif
