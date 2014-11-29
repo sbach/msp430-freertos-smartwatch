@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include "i2c_sensors.h"
 
+
+static unsigned char *pXData;
+static unsigned char byteCtr;
 /*******************************************************************************
  * \brief  Init the i2c bus for communication with sensors
  *
@@ -49,22 +52,116 @@ void i2c_sensors_init(void)
  * \param uint8_t length of the data sent
  * \return void
  ******************************************************************************/
-void i2c_sensors_write(uint8_t addr, uint8_t *pData, uint8_t length)
+void i2c_sensors_write(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t length)
 {
+/*********COMMON PART WITH READ *****************************/
+	// copy counter and buffer address
+	*pXData = pData;
+	byteCtr = length;
+	
+	// clear TX flag
+	UCB1IFG = 0;
+	
+	// write sensor address
+	ICB1I2CSA = addr; 
+	
+	// wait for bus to be free
+	while (UCB1STAT & UCBBUSY);
+	
+	//master as transmitter plus START condition
+	UCB1CTL1 |= UCTR + UCTXSTT;
+	
+	// wait address acknowledge
+	while(!(UCB1IFG &UCTXIFG));
+	
+	// write register address 
+	UCB1IFG = 0;
+	UCB1TXBUF = reg_addr;
+	
+	// wait for an ack
+	while(!(UCB1IFG &UCTXIFG));
 
+	UCB1IFG = 0;
+	
+/************************************************************/
+
+	// enable TX interrupt
+	UCB1IE |= UCTXIE;
+	
+	//TODO Semaphore TAKE ???  or Boolean ??
 }
+
 
 /*******************************************************************************
  * \brief   read the data in the i2c bus.
  *
  * \param uint8_t sensor's address 
+  * \param uint8_t sensor register address 
  * \param uint8_t * pData is the pointer to the data to be written
  * \param uint8_t length of the data sent
  * \return void
  ******************************************************************************/
-void i2c_sensors_read(uint8_t addr, uint8_t *pData, uint8_t length)
+void i2c_sensors_read(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t length)
 {
 
+	// copy counter and buffer address
+	*pXData = pData;
+	byteCtr = length;
+	
+	// clear TX flag
+	UCB1IFG = 0;
+	
+	// write sensor address
+	ICB1I2CSA = addr; 
+	
+	// wait for bus to be free
+	while (UCB1STAT & UCBBUSY);
+	
+	//master as transmitter plus START condition
+	UCB1CTL1 |= UCTR + UCTXSTT;
+	
+	// wait address acknowledge
+	while(!(UCB1IFG &UCTXIFG));
+	
+	// write register address 
+	UCB1IFG = 0;
+	UCB1TXBUF = reg_addr;
+	
+	// wait for an ack
+	while(!(UCB1IFG &UCTXIFG));
+	
+	// master as receiver
+	UCB1CTL1 &= ~UCTR;
+	UCB1IFG = 0;
+	
+	// enable RX interrupt
+	UCB1IE |= UCRXIE;
+	
+	if(length == 1)
+	{
+		/* errata usci30: prevent interruption of sending stop 
+		 * so that only one byte is read
+		 * this requires 62 us @ 320 kHz, 51 @ 400 kHz
+		 */
+		portENTER_CRITICAL();
+	  
+		UCB1CTL1 |= UCTXSTT;
+	  
+		while (UCB1CTL1 & UCTXSTT);
+
+		UCB1CTL1 |= UCTXSTP;
+	  
+		portEXIT_CRITICAL();
+	}
+	else
+	{
+		// send the RESTART condition 
+		UCB1CTL1 |= UCTXSTT;
+	}
+	
+	// wait until all data has been received and stop bit has been sent
+	// TODO USING SEMAPHORE ?? compatible with interrupt (give in interrupt ?)
+	
 }
 
 
@@ -87,10 +184,48 @@ void __attribute__ ( ( interrupt(USCI_B1_VECTOR) ) ) i2c_sensors_ISR( void )
     		break;
 		case I2C_SENSORS_STPIFG:
     		break;
+    		
     	case I2C_SENSORS_RXIFG:
+    		byteCtr--;
+    		
+    		if(byteCtr)
+    		{
+    			*pXData++ = UCB1RXBUF;
+    			if(byteCtr == 1)
+    			{
+    				// only one byte left ? Generate STOP condition
+    				UCB1CTL1 |= UCTXSTP;
+    			}
+    		}
+    		else
+    		{
+    			// copy the last byte
+    			*pXData = UCB1RXBUF;
+    			// disable RX interrupt;
+    			UCB1IE &= ~UCRXIE;
+    			// clear TX flag
+    			UCB0IFG &= ~UCTXIFG; 
+    		}
     		break;
+    		
 		case I2C_SENSORS_TXIFG:
+			if(byteCtr)
+			{
+				// copy data into TX register
+				UCB1TXBUF = *pXData++;
+				byteCtr--;
+			}
+			else
+			{
+				// send STOP condition
+				UCB1CTL1 |= UCTXSTP;
+				// disable RX interrupt;
+    			UCB1IE &= ~UCTXIE;
+				// clear TX flag
+				UCB0IFG &= ~UCTXIFG; 
+			}
 			break;
+			
         default:
             break;
     }

@@ -41,11 +41,10 @@
 //*****************************************************************************
 void i2c_sensors_init(void);
 
-void i2c_sensors_write(void);
-void i2c_sensors_read(void);
+void i2c_sensors_write(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t length);
+
+void i2c_sensors_read(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t length);
 
 void __attribute__ ( ( interrupt(USCI_B1_VECTOR) ) ) i2c_sensors_ISR( void );
-
-uint8_t reverse(uint8_t x);
 
 #endif // __HAL_LCD_H__
