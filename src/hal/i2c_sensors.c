@@ -2,8 +2,14 @@
 
 #include <msp430.h>
 #include <stdint.h>
+
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 #include "i2c_sensors.h"
 
+// Mutex for synchronization between methods and interruptions
+static xSemaphoreHandle i2c_sensors_mutex;
 
 static unsigned char *pXData;
 static unsigned char byteCtr;
@@ -14,9 +20,14 @@ static unsigned char byteCtr;
  * \return void
  ******************************************************************************/
 void i2c_sensors_init(void)
-{	
+{
+	// create mutex to synchronize write/read method with interrupts	
+	if(!i2c_sensors_mutex)
+	{
+	    i2c_sensors_mutex = xSemaphoreCreateMutex();
+	}
 
-    // I2C SDA PIN for I2C mode (P3.7)
+        // use I2C SDA PIN for I2C mode (P3.7)
 	P3SEL |= BIT7;
 	
 	// I2C_SCL_PIN for I2C mode (P5.4)
@@ -25,7 +36,7 @@ void i2c_sensors_init(void)
 	// set UCSWRST before init USCI register
 	UCB1CTL1 |= UCSWRST;
 
-    // config is on slau208n page 950
+	// config is on slau208n page 950
 	// Configure USCB1 for I2C mode:
 	// UCMST - I2C master,
 	// UCMODE_3 - I2C mode,
@@ -88,7 +99,8 @@ void i2c_sensors_write(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t l
 	// enable TX interrupt
 	UCB1IE |= UCTXIE;
 	
-	//TODO Semaphore TAKE ???  or Boolean ??
+	// wait for interrupt ends
+	xSemaphoreTake(i2c_sensors_mutex, portMAX_DELAY);
 }
 
 
@@ -103,7 +115,7 @@ void i2c_sensors_write(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t l
  ******************************************************************************/
 void i2c_sensors_read(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t length)
 {
-
+//*************************************************************
 	// copy counter and buffer address
 	*pXData = pData;
 	byteCtr = length;
@@ -129,14 +141,16 @@ void i2c_sensors_read(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t le
 	
 	// wait for an ack
 	while(!(UCB1IFG &UCTXIFG));
-	
+//*************************************************************
+
 	// master as receiver
 	UCB1CTL1 &= ~UCTR;
 	UCB1IFG = 0;
-	
+
 	// enable RX interrupt
 	UCB1IE |= UCRXIE;
-	
+
+	// if we read only one byte, stop condition must already be sent
 	if(length == 1)
 	{
 		/* errata usci30: prevent interruption of sending stop 
@@ -160,8 +174,7 @@ void i2c_sensors_read(uint8_t addr, uint8_t reg_addr, uint8_t *pData, uint8_t le
 	}
 	
 	// wait until all data has been received and stop bit has been sent
-	// TODO USING SEMAPHORE ?? compatible with interrupt (give in interrupt ?)
-	
+	if(xSemaphoreTake(i2c_sensors_mutex, portMAX_DELAY) == pdTRUE){}
 }
 
 
@@ -185,12 +198,14 @@ void __attribute__ ( ( interrupt(USCI_B1_VECTOR) ) ) i2c_sensors_ISR( void )
 		case I2C_SENSORS_STPIFG:
     		break;
     		
-    	case I2C_SENSORS_RXIFG:
+    	case I2C_SENSORS_RXIFG:	//read operation
     		byteCtr--;
-    		
+
+		// is there any byte to transmit ?
     		if(byteCtr)
     		{
     			*pXData++ = UCB1RXBUF;
+
     			if(byteCtr == 1)
     			{
     				// only one byte left ? Generate STOP condition
@@ -208,7 +223,7 @@ void __attribute__ ( ( interrupt(USCI_B1_VECTOR) ) ) i2c_sensors_ISR( void )
     		}
     		break;
     		
-		case I2C_SENSORS_TXIFG:
+		case I2C_SENSORS_TXIFG:	//write operation
 			if(byteCtr)
 			{
 				// copy data into TX register
@@ -220,7 +235,7 @@ void __attribute__ ( ( interrupt(USCI_B1_VECTOR) ) ) i2c_sensors_ISR( void )
 				// send STOP condition
 				UCB1CTL1 |= UCTXSTP;
 				// disable RX interrupt;
-    			UCB1IE &= ~UCTXIE;
+        			UCB1IE &= ~UCTXIE;
 				// clear TX flag
 				UCB0IFG &= ~UCTXIFG; 
 			}
