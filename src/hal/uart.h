@@ -20,6 +20,7 @@
 
 void halDebugUARTInit( void );
 void halDebugUARTWrite(const char *buf);
+short halDebugUARTRead(char *buf);
 
 void __attribute__ ( ( interrupt(USCI_A1_VECTOR) ) ) halDebugUARTISR( void );
 
