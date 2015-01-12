@@ -1,11 +1,16 @@
 #include "FreeRTOS.h"
+#include "semphr.h"
 
 #include "msp430.h"
 #include "rtc.h"
 
+SemaphoreHandle_t hal_rtc_a_mutex = NULL;
 
 void hal_rtc_a_init( void )
 {
+    // initialize the mutex for rtc Interrupts
+    hal_rtc_a_mutex = xSemaphoreCreateBinary();
+
     // Stop the RTC_A
     // Set RTCHOLD = 1 before writing into any of the calendar or prescalar registers
     // @see slau208n.pdf, page 622
@@ -123,6 +128,9 @@ void hal_rtc_a_set_ps0_interrupt( int enable )
 
 void __attribute__ ( ( interrupt(RTC_VECTOR) ) ) hal_rtc_a_isr( void )
 {
+    static BaseType_t xHigherPriorityTaskWoken;
+
+
     // Handle the different causes of the RTC interrupt
     // The source of the interrupt is described by the RTCIV register.
     // We check that it's value is even and in the 0-10 range.
@@ -139,7 +147,9 @@ void __attribute__ ( ( interrupt(RTC_VECTOR) ) ) hal_rtc_a_isr( void )
             break;
         case RTC_PRESCALE_ZERO_IFG:
             break;
-        case RTC_PRESCALE_ONE_IFG:
+        case RTC_PRESCALE_ONE_IFG: //  here give Mutex from ISR to call refresh screen .. 
+            xHigherPriorityTaskWoken = pdFALSE;
+            xSemaphoreGiveFromISR(hal_rtc_a_mutex, &xHigherPriorityTaskWoken);            
             break;
         default:
             break;
