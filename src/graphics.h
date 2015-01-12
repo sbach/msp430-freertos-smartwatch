@@ -9,13 +9,18 @@
 #define COLOR_Black     0x00
 #define COLOR_White     0xff
 
-#define DEFAULT_HOURS_ROW	2 
-#define DEFAULT_HOURS_COL	2
-#define DEFAULT_MINS_ROW	2
-#define DEFAULT_MINS_COL	52
+#define DEFAULT_MSG_ROW     78
+#define DEFAULT_MSG_COL     2
 
-#define DEFAULT_DATE_ROW	70
-#define DEFAULT_DATE_COL	10
+#define DEFAULT_POINT_ROW   20
+
+#define DEFAULT_HOURS_ROW   2 
+#define DEFAULT_HOURS_COL   2
+#define DEFAULT_MINS_ROW    2
+#define DEFAULT_MINS_COL    52
+
+#define DEFAULT_DATE_ROW    60
+#define DEFAULT_DATE_COL    30
 
 // Define a type Buffer to represent the LCD memory
 // 96 pixels by 96 pixels (12 8-bits words) 
@@ -48,6 +53,9 @@ tRectangle;
 
 // initialize le local screen buffer with the given color
 void initializeDisplayBuffer(void *pvDisplayData, uint8_t ucValue);
+
+// Clear the screen part between the two lines given in parameter
+void clearScreen(Buffer pvDisplayData, int8_t startRow, int8_t endRow, uint8_t ucValue);
 
 // draw a pixel on the point defined by X, Y, the color is given in parameter
 void pixelDraw(Buffer pvDisplayData, int8_t lX, int8_t lY,
@@ -97,4 +105,7 @@ void DrawTime(Buffer pvDisplayData, char const * hours, char const * minutes, et
 
 // draw the date at the specified place
 void DrawDate(Buffer pvDisplayData, char const * date, etFontType Font);
+
+// draw the message received at the same place
+void DrawMsg(Buffer pvDisplayData, char const * msg, etFontType Font);
 #endif

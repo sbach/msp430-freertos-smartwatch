@@ -5,6 +5,8 @@
 static unsigned char gColumn = 2;
 static unsigned char gRow = 5 ;
 
+static uint8_t drawnPoint = 1;
+
 //*****************************************************************************
 //
 //! Initialize DisplayBuffer.
@@ -25,8 +27,40 @@ void initializeDisplayBuffer(void *pvDisplayData, uint8_t ucValue)
 	uint8_t *pucData = pvDisplayData;
 
 	for(i =0; i< LCD_VERTICAL_MAX; i++)
-	for(j =0; j< (LCD_HORIZONTAL_MAX>>3); j++)
-		*pucData++ = ucValue;
+	    for(j =0; j< (LCD_HORIZONTAL_MAX>>3); j++)
+		    *pucData++ = ucValue;
+}
+
+
+//*****************************************************************************
+//
+//! Clear a part of the screen between the two line given in parameter.
+//!
+//! \param pvDisplayData is a pointer to the driver-specific data for this
+//! display driver.
+//!
+//! \param startRow is the first line we want to clear.
+//!
+//! \param endRow is the last line we want to clear. -1 means that we want to
+//! clear the display up to the last line.
+//!
+//! This function clear a part of the display buffer and discards any cached 
+//! data.
+//!
+//! \return None.
+//
+//*****************************************************************************
+// 
+void clearScreen(Buffer pvDisplayData, int8_t startRow, int8_t endRow, uint8_t ucValue)
+{
+    uint8_t i=0, j=0;
+
+    if(endRow==-1)
+        endRow = LCD_VERTICAL_MAX;
+
+    for(i =startRow; i< endRow; i++)
+        for(j =0; j< (LCD_HORIZONTAL_MAX>>3); j++)
+            pvDisplayData[i][j] = ucValue;
 }
 
 
@@ -645,16 +679,29 @@ void DrawChar(Buffer pvDisplayData, char const Char, etFontType Font)
 //*****************************************************************************
 void DrawTime(Buffer pvDisplayData, char const * hours, char const * minutes, etFontType Font)
 {
+    // set the current drawer pointer to hour location
     gRow = DEFAULT_HOURS_ROW;
     gColumn = DEFAULT_HOURS_COL;
 
+    // draw hours
     DrawString(pvDisplayData, hours, Font);
 
-    DrawString(pvDisplayData, ":", TimeG);
+    // change current pointer to double-point location
+    gRow = DEFAULT_POINT_ROW;
 
+    // if we need to toggle the ":" character
+    if(drawnPoint == 1)
+        DrawString(pvDisplayData, ":", TimeG);
+    else
+        DrawString(pvDisplayData, " ", TimeG);
+
+    drawnPoint = (drawnPoint+1)%2;
+
+    // change pointer to minute location
     gRow = DEFAULT_MINS_ROW;
     gColumn = DEFAULT_MINS_COL;
 
+    // and draw minutes
     DrawString(pvDisplayData, minutes, Font);
 }
 
@@ -675,8 +722,37 @@ void DrawTime(Buffer pvDisplayData, char const * hours, char const * minutes, et
 //*****************************************************************************
 void DrawDate(Buffer pvDisplayData, char const * date, etFontType Font)
 {
+    // set the drawer pointer where we need to draw the date
     gRow = DEFAULT_DATE_ROW;
     gColumn = DEFAULT_DATE_COL;
 
+    // and draw the date here
     DrawString(pvDisplayData, date, Font);
 }
+
+
+//*****************************************************************************
+//
+//! Draw the received message.
+//!
+//! \param pvDisplayData is a pointer to the driver-specific data for this
+//! display driver.
+//! \param msg: the message given as String we want to draw.
+//! \param Font is the type of Font we want to use.
+//!
+//! This function draws the message on the display.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void DrawMsg(Buffer pvDisplayData, char const * msg, etFontType Font)
+{
+    // st the drawer pointer where it had to draw the message
+    gRow = DEFAULT_MSG_ROW;
+    gColumn = DEFAULT_MSG_COL;
+
+    // and simply draw it
+    DrawString(pvDisplayData, msg, Font);
+}
+
+
