@@ -59,6 +59,21 @@ void lcd_init(void)
 	UCB0CTL1 &= ~UCSWRST;
 }
 
+//*****************************************************************************
+//
+//! Power ON on OFF the screen.
+//!
+//! This function power off/on the screen.
+//!
+//! \return None.
+//
+//*****************************************************************************
+void lcd_toggle_power( void )
+{
+	// Provide power to LCD and turn on the lcd (via DISP pin)
+	P3OUT ^= BIT4;  // power
+	P3OUT ^= BIT5;  // lcd enable
+}
 
 //*****************************************************************************
 //

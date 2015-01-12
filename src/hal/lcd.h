@@ -105,7 +105,7 @@
 // Prototypes for the globals exported by this driver.
 //*****************************************************************************
 void lcd_init(void);
-
+void lcd_toggle_power( void );
 void lcd_write(void *pvDisplayData);
 void lcd_clearScreen(void);
 void lcd_sendToggleVCOMCommand(void);
